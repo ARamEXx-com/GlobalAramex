@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tracking</title>
+
+<style>
+  :root{
+    --bg:#b30000;
+    --text:#ffffff;
+    --card-bg: rgba(0,0,0,0.22);
+    --max-width:980px;
+  }
+  *{box-sizing:border-box}
+  html,body{
+    height:100%;
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
+  .container{max-width:var(--max-width);margin:20px auto;padding:18px}
+  .logo{text-align:center;font-size:34px;font-weight:900;letter-spacing:2px}
+
+  .card{background:var(--card-bg);padding:18px;border-radius:12px;margin-top:12px}
+  input{padding:10px;border:none;border-radius:8px;width:100%}
+  .btn{padding:10px 14px;background:#000;color:#fff;border:none;border-radius:8px;font-weight:700;margin-top:8px;cursor:pointer}
+
+  .loader{display:none;margin-top:10px;text-align:center}
+  .progress{width:80%;height:8px;background:rgba(255,255,255,0.15);margin:auto;border-radius:8px;overflow:hidden}
+  .progress i{display:block;height:100%;width:0;background:white;transition:width 1.4s linear}
+
+  .result{display:none;margin-top:12px;padding:14px;border-radius:10px;background:rgba(0,0,0,0.26)}
+  .line{opacity:0;transform:translateY(6px);transition:.3s;margin:6px 0}
+  .line.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <div class="logo">TRACKING</div>
+
+  <div class="card">
+    <h3>Enter Tracking Code</h3>
+    <input id="codeInput" placeholder="Enter tracking number">
+    <button class="btn" onclick="trackNow()">TRACK</button>
+
+    <div id="loader" class="loader">
+      <div class="progress"><i id="bar"></i></div>
+    </div>
+
+    <div id="result" class="result">
+      <h3>Tracking Details</h3>
+      <div id="detailLines"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const CODE = "XXUK92502";
+
+/* Updated shipment details */
+const LINES = [
+  "<b>Status:</b> On transit",
+  "<b>Origin:</b> Sana'a, Yemen",
+  "<b>Current Location:</b> South Africa",
+  "<b>Final Destination:</b> Botswana",
+  "<b>Sender:</b> Helen Lemus",
+  "<b>Sender Address:</b> Sana'a, Yemen",
+  "<b>Receiver:</b> Tshepo Dihawa",
+  "<b>Receiver Phone:</b> +267 72132399",
+  "<b>Receiver Address:</b> POB, 286 Gumare, Okavango District, Botswana"
+];
+
+function trackNow(){
+  const input = document.getElementById("codeInput").value.trim().toUpperCase();
+  const loader = document.getElementById("loader");
+  const bar = document.getElementById("bar");
+  const result = document.getElementById("result");
+  const detailDiv = document.getElementById("detailLines");
+
+  result.style.display = "none";
+  loader.style.display = "block";
+  bar.style.width = "0%";
+  setTimeout(()=> bar.style.width="100%", 50);
+
+  setTimeout(()=>{
+    loader.style.display="none";
+
+    if(input === CODE){
+      result.style.display="block";
+      detailDiv.innerHTML = "";
+
+      LINES.forEach((txt,i)=>{
+        setTimeout(()=>{
+          const d = document.createElement("div");
+          d.className="line";
+          d.innerHTML = txt;
+          detailDiv.appendChild(d);
+          setTimeout(()=> d.classList.add("show"), 20);
+        }, i * 200);
+      });
+
+    } else {
+      result.style.display="block";
+      detailDiv.innerHTML = "<div class='line show'>❌ Invalid Tracking Number</div>";
+    }
+  },1500);
+}
+</script>
+
+</body>
+</html>
